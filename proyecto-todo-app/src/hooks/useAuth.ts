@@ -25,6 +25,10 @@ export function useAuth() {
     return () => unsubscribe();
   }, []);
 
+  function clearError() {
+    setError(null);
+  }
+
   async function register(email: string, password: string) {
     setError(null);
     try {
@@ -64,5 +68,5 @@ export function useAuth() {
     }
   }
 
-  return { user, loading, error, register, login, loginGoogle, logout };
+  return { user, loading, error, register, login, loginGoogle, logout, clearError };
 }

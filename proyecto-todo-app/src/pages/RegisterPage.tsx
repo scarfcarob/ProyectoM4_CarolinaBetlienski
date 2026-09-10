@@ -1,65 +1,98 @@
 
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import type { ChangeEvent, SyntheticEvent } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
+import { validateRegister } from '../utils/validators';
+import type { RegisterFormState, FieldErrors } from '../utils/validators';
+
+const initialRegisterForm: RegisterFormState = { email: '', password: '' };
 
 export function RegisterPage() {
-  const { register, error } = useAuthContext();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const { register, error: submitError, clearError } = useAuthContext();
+  const [form, setForm] = useState<RegisterFormState>(initialRegisterForm);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors<RegisterFormState>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function handleSubmit(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSuccess(false);
-    setSubmitting(true);
+    setSubmitSuccess(false);
+    clearError();
+
+    const errors = validateRegister(form);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setIsSubmitting(true);
     try {
-      await register(email, password);
-      setSuccess(true);
-      setEmail('');
-      setPassword('');
+      await register(form.email, form.password);
+      setSubmitSuccess(true);
+      setForm(initialRegisterForm);
+      setFieldErrors({});
     } catch {
-      //
+      // 
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   }
 
   return (
     <div>
       <h1>Registrarme</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div>
           <label htmlFor="email">Email</label>
           <input
             id="email"
+            name="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            value={form.email}
+            onChange={handleInputChange}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+            disabled={isSubmitting}
           />
+          {fieldErrors.email && (
+            <p id="email-error" role="alert">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
+
         <div>
           <label htmlFor="password">Contraseña</label>
           <input
             id="password"
+            name="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
+            value={form.password}
+            onChange={handleInputChange}
+            aria-invalid={Boolean(fieldErrors.password)}
+            aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+            disabled={isSubmitting}
           />
+          {fieldErrors.password && (
+            <p id="password-error" role="alert">
+              {fieldErrors.password}
+            </p>
+          )}
         </div>
-        <button type="submit" disabled={submitting}>
-          {submitting ? <Spinner size="sm" /> : 'Registrarme'}
-        </button>
-      </form>
 
-      {error && <ErrorMessage message={error} />}
-      {success && <p>¡Cuenta creada correctamente!</p>}
+        {submitError && <ErrorMessage message={submitError} />}
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? <Spinner size="sm" /> : 'Registrarme'}
+        </button>
+
+        {submitSuccess && <p>¡Cuenta creada correctamente!</p>}
+      </form>
     </div>
   );
 }
