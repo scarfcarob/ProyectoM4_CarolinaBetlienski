@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import type { ChangeEvent, SyntheticEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
@@ -10,6 +11,7 @@ import type { RegisterFormState, FieldErrors } from '../utils/validators';
 const initialRegisterForm: RegisterFormState = { email: '', password: '' };
 
 export function RegisterPage() {
+  const navigate = useNavigate();
   const { register, error: submitError, clearError } = useAuthContext();
   const [form, setForm] = useState<RegisterFormState>(initialRegisterForm);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<RegisterFormState>>({});
@@ -36,6 +38,7 @@ export function RegisterPage() {
       setSubmitSuccess(true);
       setForm(initialRegisterForm);
       setFieldErrors({});
+      navigate('/tasks', { replace: true });
     } catch {
       // 
     } finally {

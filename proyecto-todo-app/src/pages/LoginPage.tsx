@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import type { ChangeEvent, SyntheticEvent } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
@@ -9,8 +10,14 @@ import type { LoginFormState, FieldErrors } from '../utils/validators';
 
 const initialLoginForm: LoginFormState = { email: '', password: '' };
 
+interface LocationState {
+  from?: { pathname: string };
+}
+
 export function LoginPage() {
   const { login, error: submitError, clearError } = useAuthContext();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState<LoginFormState>(initialLoginForm);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<LoginFormState>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,8 +43,12 @@ export function LoginPage() {
       setSubmitSuccess(true);
       setForm(initialLoginForm);
       setFieldErrors({});
+
+      const state = location.state as LocationState | null;
+      const from = state?.from?.pathname ?? '/tasks';
+      navigate(from, { replace: true });
     } catch {
-      //
+      // 
     } finally {
       setIsSubmitting(false);
     }
