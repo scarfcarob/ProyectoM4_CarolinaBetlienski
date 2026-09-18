@@ -1,15 +1,39 @@
 
-import { useAuthContext } from '../context/AuthContext';
+import { useTasks } from '../hooks/useTasks';
 
 export function TasksPage() {
-  const { user, logout } = useAuthContext();
+    const { tasks, loading, error, addTask } = useTasks();
 
-  return (
-    <div>
-      <p>Sesión iniciada como: {user?.email}</p>
-      <button onClick={() => logout()}>Cerrar sesión</button>
-      <h1>Mis tareas</h1>
-      {/* CRUD de tareas */}
-    </div>
-  );
-}
+    async function handleTestAdd() {
+        await addTask({ title: 'Tarea de prueba', description: 'Probando el hook' });
+    }
+
+    if (loading) {
+        return <p>Cargando tareas...</p>;
+    }
+
+    if (error) {
+        return <p>Error: {error}</p>;
+    }
+
+    return (
+        <div>
+            <h1>Mis tareas</h1>
+            <button onClick={handleTestAdd}>Agregar tarea de prueba</button>
+
+            <ul>
+                {tasks.map((task) => (
+                    <li key={task.id}>
+                        {task.title} — {task.completed ? 'completada' : 'pendiente'}
+                    </li>
+                ))}
+            </ul>
+
+            {/* Provisorio para depurar en consola */}
+            <pre>{JSON.stringify(tasks, null, 2)}</pre>
+        </div>
+    );
+};
+
+
+
