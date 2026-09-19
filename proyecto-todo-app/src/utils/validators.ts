@@ -60,3 +60,25 @@ export function validateRegister(form: RegisterFormState): FieldErrors<RegisterF
 
   return errors;
 }
+
+
+export interface TaskFormState {
+  title: string;
+  description: string;
+}
+
+export function validateTask(form: TaskFormState): FieldErrors<TaskFormState> {
+  const errors: FieldErrors<TaskFormState> = {};
+
+  if (!form.title.trim()) {
+    errors.title = 'Ingresá un título para la tarea.';
+  } else if (form.title.trim().length > 100) {
+    errors.title = 'El título no puede superar los 100 caracteres.';
+  }
+
+  if (form.description.trim().length > 500) {
+    errors.description = 'La descripción no puede superar los 500 caracteres.';
+  }
+
+  return errors;
+}

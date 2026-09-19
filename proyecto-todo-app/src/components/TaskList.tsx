@@ -1,26 +1,28 @@
 
+import type { Task } from '../types/task';
 import { TaskCard } from './TaskCard';
 
-interface Tarea {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
 interface TaskListProps {
-  tareas: Tarea[];
-  onToggle: (id: string) => void;
+  tasks: Task[];
+  onToggle: (task: Task) => void;
+  onDelete: (taskId: string) => void;
+  onEdit: (taskId: string, title: string, description: string) => Promise<void>;
 }
 
-export function TaskList({ tareas, onToggle }: TaskListProps) {
+export function TaskList({ tasks, onToggle, onDelete, onEdit }: TaskListProps) {
+  if (tasks.length === 0) {
+    return <p>No tenés tareas todavía. ¡Agregá la primera!</p>;
+  }
+
   return (
     <ul>
-      {tareas.map((tarea) => (
+      {tasks.map((task) => (
         <TaskCard
-          key={tarea.id}
-          title={tarea.title}
-          completed={tarea.completed}
-          onToggle={() => onToggle(tarea.id)}
+          key={task.id}
+          task={task}
+          onToggle={() => onToggle(task)}
+          onDelete={() => onDelete(task.id)}
+          onEdit={(title, description) => onEdit(task.id, title, description)}
         />
       ))}
     </ul>

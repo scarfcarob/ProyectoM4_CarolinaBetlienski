@@ -12,27 +12,27 @@ export function useTasks() {
 
     useEffect(() => {
         if (!user) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect -- reset intencional al cerrar sesión, no es un cálculo derivable en render
-            setTasks([]);
-            setLoading(false);
-            return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- reset intencional al cerrar sesión, no es un cálculo derivable en render
+        setTasks([]);
+        setLoading(false);
+        return;
         }
 
-        setLoading(true);
-        const unsubscribe = tasksService.subscribeToUserTasks(
-            user.uid,
-            (updatedTasks) => {
-                setTasks(updatedTasks);
-                setLoading(false);
-                setError(null);
-            },
-            (err) => {
-                setError(err.message);
-                setLoading(false);
-            }
-        );
+    setLoading(true);
+    const unsubscribe = tasksService.subscribeToUserTasks(
+        user.uid,
+        (updatedTasks) => {
+        setTasks(updatedTasks);
+        setLoading(false);
+        setError(null);
+        },
+        (err) => {
+        setError(err.message);
+        setLoading(false);
+        }
+    );
 
-        return () => unsubscribe();
+    return () => unsubscribe();
     }, [user]);
 
     async function addTask(newTask: NewTask) {
