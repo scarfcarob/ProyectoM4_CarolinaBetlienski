@@ -34,7 +34,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div>
         <input
           type="text"
@@ -44,9 +44,12 @@ export function TaskForm({ onAdd }: TaskFormProps) {
           aria-invalid={!!fieldErrors.title}
           aria-describedby={fieldErrors.title ? 'title-error' : undefined}
           disabled={isSubmitting}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
         />
         {fieldErrors.title && (
-          <span id="title-error" role="alert">{fieldErrors.title}</span>
+          <span id="title-error" role="alert" className="mt-1 block text-sm text-red-600">
+            {fieldErrors.title}
+          </span>
         )}
       </div>
 
@@ -58,13 +61,20 @@ export function TaskForm({ onAdd }: TaskFormProps) {
           aria-invalid={!!fieldErrors.description}
           aria-describedby={fieldErrors.description ? 'description-error' : undefined}
           disabled={isSubmitting}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
         />
         {fieldErrors.description && (
-          <span id="description-error" role="alert">{fieldErrors.description}</span>
+          <span id="description-error" role="alert" className="mt-1 block text-sm text-red-600">
+            {fieldErrors.description}
+          </span>
         )}
       </div>
 
-      <button type="submit" disabled={isSubmitting}>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-300 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+      >
         {isSubmitting ? 'Agregando...' : 'Agregar tarea'}
       </button>
 

@@ -34,11 +34,28 @@ export function SendSummaryButton({ userEmail, summary }: SendSummaryButtonProps
   }
 
   return (
-    <div>
-      <button onClick={handleClick} disabled={status === 'loading'}>
+    <div className="flex flex-col items-end gap-1">
+      <button
+        onClick={handleClick}
+        disabled={status === 'loading'}
+        className="text-sm font-medium text-violet-600 hover:text-violet-700 disabled:text-violet-300 border border-violet-200 hover:bg-violet-50 rounded-lg px-4 py-2 transition-colors"
+      >
         {status === 'loading' ? 'Enviando...' : 'Enviar resumen por email'}
       </button>
-      {feedback && <p role="status">{feedback}</p>}
+      {feedback && (
+        <p
+          role="status"
+          className={
+            status === 'error'
+              ? 'text-xs text-red-600'
+              : status === 'success'
+              ? 'text-xs text-green-600'
+              : 'text-xs text-gray-500'
+          }
+        >
+          {feedback}
+        </p>
+      )}
     </div>
   );
 }

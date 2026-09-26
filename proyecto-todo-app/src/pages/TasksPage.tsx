@@ -25,7 +25,11 @@ export function TasksPage() {
   }
 
   if (loading) {
-    return <Spinner size="md" />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Spinner size="md" />
+      </div>
+    );
   }
 
   const completedTasks = tasks.filter((t) => t.completed).length;
@@ -33,25 +37,32 @@ export function TasksPage() {
   const pendingTasks = totalTasks - completedTasks;
 
   return (
-    <div>
-      <h1>Mis tareas</h1>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">Mis tareas</h1>
+          <SendSummaryButton
+            userEmail={user?.email ?? null}
+            summary={{ totalTasks, completedTasks, pendingTasks }}
+          />
+        </div>
 
-      <SendSummaryButton
-        userEmail={user?.email ?? null}
-        summary={{ totalTasks, completedTasks, pendingTasks }}
-      />
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <TaskForm onAdd={addTask} />
+        </div>
 
-      <TaskForm onAdd={addTask} />
-      {error && <ErrorMessage message={error} />}
-      <TaskList
-        tasks={tasks}
-        onToggle={handleToggle}
-        onDelete={removeTask}
-        onEdit={handleEdit}
-      />
+        {error && <ErrorMessage message={error} />}
+
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <TaskList
+            tasks={tasks}
+            onToggle={handleToggle}
+            onDelete={removeTask}
+            onEdit={handleEdit}
+          />
+        </div>
+      </div>
     </div>
   );
 }
-
-
 

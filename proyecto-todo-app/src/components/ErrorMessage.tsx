@@ -4,5 +4,9 @@ interface ErrorMessageProps {
 }
 
 export function ErrorMessage({ message }: ErrorMessageProps) {
-  return <p role="alert" style={{ color: 'red' }}>{message}</p>;
+  return (
+    <p role="alert" className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
+      {message}
+    </p>
+  );
 }

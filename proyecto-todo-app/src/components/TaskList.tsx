@@ -11,11 +11,11 @@ interface TaskListProps {
 
 export function TaskList({ tasks, onToggle, onDelete, onEdit }: TaskListProps) {
   if (tasks.length === 0) {
-    return <p>No tenés tareas todavía. ¡Agregá la primera!</p>;
+    return <p className="text-sm text-gray-500 text-center py-6">No tenés tareas todavía. ¡Agregá la primera!</p>;
   }
 
   return (
-    <ul>
+    <ul className="space-y-3">
       {tasks.map((task) => (
         <TaskCard
           key={task.id}
