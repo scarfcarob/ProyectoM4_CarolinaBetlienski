@@ -34,12 +34,15 @@ export function SendSummaryButton({ userEmail, summary }: SendSummaryButtonProps
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="flex flex-col items-start sm:items-end gap-1.5 w-full sm:w-auto">
       <button
         onClick={handleClick}
         disabled={status === 'loading'}
-        className="text-sm font-medium text-violet-600 hover:text-violet-700 disabled:text-violet-300 border border-violet-200 hover:bg-violet-50 rounded-lg px-4 py-2 transition-colors"
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100/80 active:bg-violet-200 border border-violet-200/60 rounded-xl px-4 py-2.5 transition-all shadow-sm"
       >
+        <svg className="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
         {status === 'loading' ? 'Enviando...' : 'Enviar resumen por email'}
       </button>
       {feedback && (
@@ -47,9 +50,9 @@ export function SendSummaryButton({ userEmail, summary }: SendSummaryButtonProps
           role="status"
           className={
             status === 'error'
-              ? 'text-xs text-red-600'
+              ? 'text-xs font-medium text-red-600'
               : status === 'success'
-              ? 'text-xs text-green-600'
+              ? 'text-xs font-medium text-emerald-600'
               : 'text-xs text-gray-500'
           }
         >

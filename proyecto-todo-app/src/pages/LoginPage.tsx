@@ -75,7 +75,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-6 md:p-8">
         <h1 className="text-2xl font-bold text-gray-900 text-center mb-1">Iniciar sesión</h1>
         <p className="text-sm text-gray-500 text-center mb-6">
           Ingresá para gestionar tus tareas.

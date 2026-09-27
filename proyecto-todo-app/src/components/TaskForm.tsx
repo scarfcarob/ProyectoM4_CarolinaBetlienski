@@ -34,20 +34,20 @@ export function TaskForm({ onAdd }: TaskFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <input
           type="text"
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
-          placeholder="Título de la tarea"
+          placeholder="¿Qué tenés pendiente hacer?"
           aria-invalid={!!fieldErrors.title}
           aria-describedby={fieldErrors.title ? 'title-error' : undefined}
           disabled={isSubmitting}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
+          className="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent disabled:bg-gray-100 transition-all"
         />
         {fieldErrors.title && (
-          <span id="title-error" role="alert" className="mt-1 block text-sm text-red-600">
+          <span id="title-error" role="alert" className="mt-1 block text-xs font-medium text-red-600">
             {fieldErrors.title}
           </span>
         )}
@@ -57,26 +57,38 @@ export function TaskForm({ onAdd }: TaskFormProps) {
         <textarea
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
-          placeholder="Descripción (opcional)"
+          placeholder="Añadir una descripción detallada (opcional)"
+          rows={2}
           aria-invalid={!!fieldErrors.description}
           aria-describedby={fieldErrors.description ? 'description-error' : undefined}
           disabled={isSubmitting}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
+          className="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent disabled:bg-gray-100 transition-all resize-none"
         />
         {fieldErrors.description && (
-          <span id="description-error" role="alert" className="mt-1 block text-sm text-red-600">
+          <span id="description-error" role="alert" className="mt-1 block text-xs font-medium text-red-600">
             {fieldErrors.description}
           </span>
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-300 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
-      >
-        {isSubmitting ? 'Agregando...' : 'Agregar tarea'}
-      </button>
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 disabled:bg-violet-300 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
+        >
+          {isSubmitting ? (
+            'Agregando...'
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Agregar tarea
+            </>
+          )}
+        </button>
+      </div>
 
       {submitError && <ErrorMessage message={submitError} />}
     </form>
