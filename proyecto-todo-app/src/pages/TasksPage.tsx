@@ -14,15 +14,25 @@ export function TasksPage() {
   const { user, logout } = useAuthContext();
   const navigate = useNavigate();
   const { tasks, loading, error, addTask, editTask, removeTask } = useTasks();
-  const [toggleError, setToggleError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   async function handleToggle(task: Task) {
-    setToggleError(null);
+    setActionError(null);
     try {
       await editTask(task.id, { completed: !task.completed });
     } catch (err) {
-      setToggleError('No se pudo actualizar la tarea. Intentá de nuevo.');
+      setActionError('No se pudo actualizar la tarea. Intentá de nuevo.');
       console.error('Error al actualizar la tarea:', err);
+    }
+  }
+
+  async function handleDelete(taskId: string) {
+    setActionError(null);
+    try {
+      await removeTask(taskId);
+    } catch (err) {
+      setActionError('No se pudo eliminar la tarea. Intentá de nuevo.');
+      console.error('Error al eliminar la tarea:', err);
     }
   }
 
@@ -50,8 +60,7 @@ export function TasksPage() {
   return (
     <div className="min-h-screen bg-gray-50/60 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-6">
-        
-        {/* Navigation / Header bar */}
+
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-semibold text-sm">
@@ -70,7 +79,6 @@ export function TasksPage() {
           </button>
         </header>
 
-        {/* Title & Action Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Mis Tareas</h1>
@@ -82,7 +90,6 @@ export function TasksPage() {
           />
         </div>
 
-        {/* Dashboard Stat Cards */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-100 shadow-sm text-center sm:text-left">
             <p className="text-xs font-medium text-gray-500">Totales</p>
@@ -98,22 +105,19 @@ export function TasksPage() {
           </div>
         </div>
 
-        {/* Formulario de Nueva Tarea */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h2 className="text-base font-semibold text-gray-800 mb-4">Agregar nueva tarea</h2>
           <TaskForm onAdd={addTask} />
         </section>
 
-        {/* Mensajes de Error */}
         {error && <ErrorMessage message={error} />}
-        {toggleError && <ErrorMessage message={toggleError} />}
+        {actionError && <ErrorMessage message={actionError} />}
 
-        {/* Lista de Tareas */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <TaskList
             tasks={tasks}
             onToggle={handleToggle}
-            onDelete={removeTask}
+            onDelete={handleDelete}
             onEdit={handleEdit}
           />
         </section>

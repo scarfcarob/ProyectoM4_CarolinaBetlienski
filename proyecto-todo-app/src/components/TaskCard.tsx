@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import type { Task } from '../types/task';
 import { formatDate } from '../utils/formatDate';
+import { validateTask, type FieldErrors, type TaskFormState } from '../utils/validators';
+import { ErrorMessage } from './ErrorMessage';
 
 interface TaskCardProps {
   task: Task;
@@ -15,13 +17,21 @@ export function TaskCard({ task, onToggle, onDelete, onEdit }: TaskCardProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [isSaving, setIsSaving] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors<TaskFormState>>({});
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   async function handleSave() {
-    if (!title.trim()) return;
+    const errors = validateTask({ title, description });
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setSaveError(null);
     setIsSaving(true);
     try {
       await onEdit(title.trim(), description.trim());
       setIsEditing(false);
+    } catch {
+      setSaveError('No se pudo guardar los cambios. Intentá de nuevo.');
     } finally {
       setIsSaving(false);
     }
@@ -30,6 +40,8 @@ export function TaskCard({ task, onToggle, onDelete, onEdit }: TaskCardProps) {
   function handleCancel() {
     setTitle(task.title);
     setDescription(task.description);
+    setFieldErrors({});
+    setSaveError(null);
     setIsEditing(false);
   }
 
@@ -37,22 +49,41 @@ export function TaskCard({ task, onToggle, onDelete, onEdit }: TaskCardProps) {
     return (
       <li className="border border-violet-200 bg-violet-50/30 rounded-2xl p-4 space-y-3 transition-all">
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Título</label>
+          <label htmlFor={`title-${task.id}`} className="block text-xs font-semibold text-gray-600 mb-1">Título</label>
           <input
+            id={`title-${task.id}`}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            aria-invalid={!!fieldErrors.title}
+            aria-describedby={fieldErrors.title ? `title-error-${task.id}` : undefined}
             className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
           />
+          {fieldErrors.title && (
+            <span id={`title-error-${task.id}`} role="alert" className="mt-1 block text-xs font-medium text-red-600">
+              {fieldErrors.title}
+            </span>
+          )}
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Descripción</label>
+          <label htmlFor={`description-${task.id}`} className="block text-xs font-semibold text-gray-600 mb-1">Descripción</label>
           <textarea
+            id={`description-${task.id}`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
+            aria-invalid={!!fieldErrors.description}
+            aria-describedby={fieldErrors.description ? `description-error-${task.id}` : undefined}
             className="w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all resize-none"
           />
+          {fieldErrors.description && (
+            <span id={`description-error-${task.id}`} role="alert" className="mt-1 block text-xs font-medium text-red-600">
+              {fieldErrors.description}
+            </span>
+          )}
         </div>
+
+        {saveError && <ErrorMessage message={saveError} />}
+
         <div className="flex items-center gap-2 justify-end pt-1">
           <button
             onClick={handleCancel}
@@ -63,7 +94,7 @@ export function TaskCard({ task, onToggle, onDelete, onEdit }: TaskCardProps) {
           </button>
           <button
             onClick={handleSave}
-            disabled={isSaving || !title.trim()}
+            disabled={isSaving}
             className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-300 text-white text-xs font-semibold rounded-xl px-4 py-2 transition-colors shadow-sm"
           >
             {isSaving ? 'Guardando...' : 'Guardar cambios'}
