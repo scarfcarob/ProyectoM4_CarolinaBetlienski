@@ -4,6 +4,8 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 const sesClient = new SESClient({ region: process.env.AWS_REGION });
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 interface EmailRequestBody {
   to?: string;
   totalTasks?: number;
@@ -25,8 +27,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { to, totalTasks, completedTasks, pendingTasks } = req.body as EmailRequestBody;
 
-  if (!to || typeof to !== 'string') {
-    return res.status(400).json({ error: 'Falta el email destinatario' });
+  if (!to || typeof to !== 'string' || !EMAIL_REGEX.test(to.trim())) {
+    return res.status(400).json({ error: 'El email destinatario no es válido' });
   }
 
   if (
@@ -65,7 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const command = new SendEmailCommand({
       Source: senderEmail,
-      Destination: { ToAddresses: [to] },
+      Destination: { ToAddresses: [to.trim()] },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },
         Body: {
@@ -82,7 +84,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Error al enviar email con SES:', error);
     return res.status(500).json({
       error: 'No se pudo enviar el email. Intentá de nuevo.',
-      detail: error instanceof Error ? error.message : String(error),
     });
   }
 }
