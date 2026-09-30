@@ -8,7 +8,7 @@ import { Spinner } from '../components/Spinner';
 import { validateRegister } from '../utils/validators';
 import type { RegisterFormState, FieldErrors } from '../utils/validators';
 
-const initialRegisterForm: RegisterFormState = { email: '', password: '' };
+const initialRegisterForm: RegisterFormState = { email: '', password: '', confirmPassword: '' };
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -116,6 +116,31 @@ export function RegisterPage() {
             {fieldErrors.password && (
               <p id="password-error" role="alert" className="mt-1 text-sm text-red-600">
                 {fieldErrors.password}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Confirmar contraseña
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              value={form.confirmPassword}
+              onChange={handleInputChange}
+              aria-invalid={Boolean(fieldErrors.confirmPassword)}
+              aria-describedby={fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
+              disabled={isAnySubmitting}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
+            />
+            {fieldErrors.confirmPassword && (
+              <p id="confirmPassword-error" role="alert" className="mt-1 text-sm text-red-600">
+                {fieldErrors.confirmPassword}
               </p>
             )}
           </div>

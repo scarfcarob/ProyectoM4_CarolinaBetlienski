@@ -9,6 +9,7 @@ export interface LoginFormState {
 export interface RegisterFormState {
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 
@@ -44,6 +45,19 @@ export function validateLogin(form: LoginFormState): FieldErrors<LoginFormState>
   return errors;
 }
 
+export function validatePasswordMatch(
+  password: string,
+  confirmPassword: string,
+): string | undefined {
+  if (!confirmPassword) {
+    return 'Confirmá tu contraseña.';
+  }
+  if (password !== confirmPassword) {
+    return 'Las contraseñas no coinciden.';
+  }
+  return undefined;
+}
+
 export function validateRegister(form: RegisterFormState): FieldErrors<RegisterFormState> {
   const errors: FieldErrors<RegisterFormState> = {};
 
@@ -56,6 +70,11 @@ export function validateRegister(form: RegisterFormState): FieldErrors<RegisterF
     errors.password = 'Ingresá una contraseña.';
   } else if (form.password.length < 6) {
     errors.password = 'La contraseña debe tener al menos 6 caracteres.';
+  }
+
+  const confirmError = validatePasswordMatch(form.password, form.confirmPassword);
+  if (confirmError) {
+    errors.confirmPassword = confirmError;
   }
 
   return errors;

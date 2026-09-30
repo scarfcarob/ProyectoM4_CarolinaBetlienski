@@ -1,6 +1,11 @@
 
 import { describe, it, expect } from 'vitest';
-import { validateTask, validateLogin, validateRegister } from '../../src/utils/validators';
+import {
+  validateTask,
+  validateLogin,
+  validateRegister,
+  validatePasswordMatch,
+} from '../../src/utils/validators';
 
 describe('validateTask', () => {
   it('no devuelve errores para un título y descripción válidos', () => {
@@ -45,14 +50,55 @@ describe('validateLogin', () => {
   });
 });
 
+describe('validatePasswordMatch', () => {
+  it('devuelve undefined si las contraseñas coinciden', () => {
+    expect(validatePasswordMatch('abc123', 'abc123')).toBeUndefined();
+  });
+
+  it('devuelve error si no coinciden', () => {
+    expect(validatePasswordMatch('abc123', 'abc124')).toBe('Las contraseñas no coinciden.');
+  });
+
+  it('devuelve error si la confirmación está vacía', () => {
+    expect(validatePasswordMatch('abc123', '')).toBe('Confirmá tu contraseña.');
+  });
+});
+
 describe('validateRegister', () => {
   it('marca error si el password tiene menos de 6 caracteres', () => {
-    const errors = validateRegister({ email: 'user@test.com', password: '123' });
+    const errors = validateRegister({
+      email: 'user@test.com',
+      password: '123',
+      confirmPassword: '123',
+    });
     expect(errors.password).toBe('La contraseña debe tener al menos 6 caracteres.');
   });
 
   it('no devuelve errores con datos válidos', () => {
-    const errors = validateRegister({ email: 'user@test.com', password: '123456' });
+    const errors = validateRegister({
+      email: 'user@test.com',
+      password: '123456',
+      confirmPassword: '123456',
+    });
     expect(errors).toEqual({});
+  });
+
+  it('marca error en confirmPassword si las contraseñas no coinciden', () => {
+    const errors = validateRegister({
+      email: 'user@test.com',
+      password: '123456',
+      confirmPassword: '654321',
+    });
+    expect(errors.confirmPassword).toBe('Las contraseñas no coinciden.');
+    expect(errors.password).toBeUndefined();
+  });
+
+  it('marca error en confirmPassword si está vacío', () => {
+    const errors = validateRegister({
+      email: 'user@test.com',
+      password: '123456',
+      confirmPassword: '',
+    });
+    expect(errors.confirmPassword).toBe('Confirmá tu contraseña.');
   });
 });
