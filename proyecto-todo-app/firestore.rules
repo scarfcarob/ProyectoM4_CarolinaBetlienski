@@ -8,7 +8,6 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
@@ -31,7 +30,8 @@ service cloud.firestore {
                        isOwner(request.resource.data.userId) &&
                        request.resource.data.title is string &&
                        request.resource.data.description is string &&
-                       request.resource.data.completed is bool;
+                       request.resource.data.completed is bool &&
+                       request.resource.data.createdAt == resource.data.createdAt;
 
       allow delete: if isOwner(resource.data.userId);
     }
