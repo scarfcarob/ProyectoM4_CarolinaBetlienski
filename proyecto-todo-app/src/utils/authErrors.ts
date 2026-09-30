@@ -8,6 +8,9 @@ const errorMessages: Record<string, string> = {
   'auth/invalid-credential': 'Correo o contraseña incorrectos.',
   'auth/too-many-requests': 'Demasiados intentos. Probá de nuevo más tarde.',
   'auth/popup-closed-by-user': 'Cerraste la ventana de Google antes de completar el login.',
+  'auth/popup-blocked': 'El navegador bloqueó la ventana de Google. Habilitá los popups e intentá de nuevo.',
+  'auth/cancelled-popup-request': 'Se canceló el inicio de sesión con Google. Intentá de nuevo.',
+  'auth/network-request-failed': 'No hay conexión a internet. Revisá tu red e intentá de nuevo.',
 };
 
 export function getAuthErrorMessage(error: unknown): string {

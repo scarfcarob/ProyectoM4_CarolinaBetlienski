@@ -7,8 +7,8 @@ export interface Task {
     description: string;
     completed: boolean;
     userId: string;
-    createdAt: Timestamp;
-    updatedAt?: Timestamp; // útil para ordenar/sincronizar en el futuro
+    createdAt: Timestamp | null;
+    updatedAt?: Timestamp;
 }
 
 export interface NewTask {
