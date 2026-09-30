@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import type { NewTask } from '../types/task';
 import { validateTask, type FieldErrors, type TaskFormState } from '../utils/validators';
 import { ErrorMessage } from './ErrorMessage';
@@ -14,7 +15,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const errors = validateTask(form);
