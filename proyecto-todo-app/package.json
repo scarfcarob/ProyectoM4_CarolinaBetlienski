@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "dev:all": "concurrently \"vite\" \"vercel dev --listen 3001\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
