@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
@@ -18,6 +18,11 @@ export function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    clearError();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- se ejecuta solo al montar la página
+  }, []);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
