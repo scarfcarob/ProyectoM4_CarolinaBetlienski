@@ -4,6 +4,7 @@ import type { ChangeEvent, SyntheticEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { ErrorMessage } from '../components/ErrorMessage';
+import { PasswordInput } from '../components/PasswordInput';
 import { Spinner } from '../components/Spinner';
 import { validateRegister } from '../utils/validators';
 import type { RegisterFormState, FieldErrors } from '../utils/validators';
@@ -102,16 +103,14 @@ export function RegisterPage() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Contraseña
             </label>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               value={form.password}
               onChange={handleInputChange}
-              aria-invalid={Boolean(fieldErrors.password)}
-              aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+              invalid={Boolean(fieldErrors.password)}
+              describedBy={fieldErrors.password ? 'password-error' : undefined}
               disabled={isAnySubmitting}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
             />
             {fieldErrors.password && (
               <p id="password-error" role="alert" className="mt-1 text-sm text-red-600">
@@ -127,16 +126,14 @@ export function RegisterPage() {
             >
               Confirmar contraseña
             </label>
-            <input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              type="password"
               value={form.confirmPassword}
               onChange={handleInputChange}
-              aria-invalid={Boolean(fieldErrors.confirmPassword)}
-              aria-describedby={fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
+              invalid={Boolean(fieldErrors.confirmPassword)}
+              describedBy={fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
               disabled={isAnySubmitting}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 disabled:bg-gray-100"
             />
             {fieldErrors.confirmPassword && (
               <p id="confirmPassword-error" role="alert" className="mt-1 text-sm text-red-600">
