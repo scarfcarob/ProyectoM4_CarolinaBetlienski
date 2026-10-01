@@ -41,6 +41,9 @@ export function TasksPage() {
   }
 
   async function handleLogout() {
+    const confirmed = window.confirm('¿Seguro que querés cerrar sesión?');
+    if (!confirmed) return;
+
     await logout();
     navigate('/login', { replace: true });
   }
